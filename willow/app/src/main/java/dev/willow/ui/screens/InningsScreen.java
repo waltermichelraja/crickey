@@ -3,6 +3,7 @@ package dev.willow.ui.screens;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+
 import dev.willow.engine.GameConfig;
 import dev.willow.engine.InningsState;
 import dev.willow.engine.MatchResult;
@@ -71,7 +72,7 @@ public class InningsScreen implements Screen{
                 return;
             }
             if(pendingResult!=null){
-                manager.show(new ResultScreen(manager, pendingResult, playerScore, opponentScore));
+                manager.show(new ResultScreen(manager, pendingResult, config, playerScore, opponentScore));
             }
             return;
         }

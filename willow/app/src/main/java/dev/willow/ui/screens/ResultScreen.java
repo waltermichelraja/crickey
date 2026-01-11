@@ -3,6 +3,8 @@ package dev.willow.ui.screens;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+
+import dev.willow.engine.GameConfig;
 import dev.willow.engine.MatchResult;
 import dev.willow.ui.Screen;
 import dev.willow.ui.ScreenManager;
@@ -10,12 +12,14 @@ import dev.willow.ui.ScreenManager;
 public class ResultScreen implements Screen{
     private final ScreenManager manager;
     private final MatchResult result;
+    private final GameConfig config;
     private final int yourScore;
     private final int oppScore;
 
-    public ResultScreen(ScreenManager manager, MatchResult result, int yourScore, int oppScore){
+    public ResultScreen(ScreenManager manager, MatchResult result, GameConfig config, int yourScore, int oppScore){
         this.manager=manager;
         this.result=result;
+        this.config=config;
         this.yourScore=yourScore;
         this.oppScore=oppScore;
     }
@@ -32,11 +36,11 @@ public class ResultScreen implements Screen{
         tg.putString(5, 4, headline);
         tg.putString(5, 6, "your score     : "+yourScore);
         tg.putString(5, 7, "opponent score : "+oppScore);
-        tg.putString(5, 10, "press ENTER to return to main menu");
+        tg.putString(5, 10, "press ENTER to start a new game");
     }
 
     @Override
     public void handleInput(KeyStroke key){
-        if(key.getKeyType()==KeyType.Enter){manager.show(new MainMenuScreen(manager));}
+        if(key.getKeyType()==KeyType.Enter){manager.show(new TossScreen(manager, config));}
     }
 }
