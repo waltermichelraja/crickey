@@ -19,32 +19,35 @@ public class WicketsConfigScreen implements Screen{
     public WicketsConfigScreen(ScreenManager manager, OptionalInt overs){
         this.manager=manager;
         this.overs=overs;
-        this.menu=new MenuWidget(List.of("1 wicket", "2 wickets", "unlimited"));
+        this.menu=new MenuWidget(List.of("1 wicket", "2 wickets", "custom", "unlimited"));
     }
 
     @Override
     public void render(){
         TextGraphics tg=manager.terminal().newTextGraphics();
-        tg.putString(5, 2, "MATCH CONFIGIURATION");
+        tg.putString(5, 2, "MATCH CONFIGURATION");
         tg.putString(5, 4, "wickets per innings");
         menu.render(tg, 5, 6);
     }
 
     @Override
     public void handleInput(KeyStroke key){
-        if (key.getKeyType()==KeyType.ArrowUp || key.getKeyType()==KeyType.ArrowDown){
+        if(key.getKeyType()==KeyType.ArrowUp || key.getKeyType()==KeyType.ArrowDown){
             menu.handleInput(key);
             return;
         }
         if(menu.isSelected(key)){
-            OptionalInt wickets=switch(menu.selectedIndex()){
-                case 0->OptionalInt.of(1);
-                case 1->OptionalInt.of(2);
-                case 2->OptionalInt.empty();
-                default->OptionalInt.of(1);
-            };
-            GameConfig config=new GameConfig(overs, wickets);
-            manager.show(new TossScreen(manager, config));
+            switch(menu.selectedIndex()){
+                case 0->finish(OptionalInt.of(1));
+                case 1->finish(OptionalInt.of(2));
+                case 2->manager.show(new CustomConfigScreen(manager, "wickets per innings", 6, value->finish(OptionalInt.of(value)), this));
+                case 3->finish(OptionalInt.empty());
+            }
         }
+    }
+
+    private void finish(OptionalInt wickets){
+        GameConfig config=new GameConfig(overs, wickets);
+        manager.show(new TossScreen(manager, config));
     }
 }

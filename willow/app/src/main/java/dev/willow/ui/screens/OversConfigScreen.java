@@ -16,13 +16,13 @@ public class OversConfigScreen implements Screen{
 
     public OversConfigScreen(ScreenManager manager){
         this.manager=manager;
-        this.menu=new MenuWidget(List.of("1 over", "2 overs", "unlimited"));
+        this.menu=new MenuWidget(List.of("1 over", "2 overs", "custom", "unlimited"));
     }
 
     @Override
     public void render(){
         TextGraphics tg=manager.terminal().newTextGraphics();
-        tg.putString(5, 2, "MATCH CONFIGIURATION");
+        tg.putString(5, 2, "MATCH CONFIGURATION");
         tg.putString(5, 4, "overs per innings");
         menu.render(tg, 5, 6);
     }
@@ -34,13 +34,13 @@ public class OversConfigScreen implements Screen{
             return;
         }
         if(menu.isSelected(key)){
-            OptionalInt overs=switch(menu.selectedIndex()){
-                case 0->OptionalInt.of(1);
-                case 1->OptionalInt.of(2);
-                case 2->OptionalInt.empty();
-                default->OptionalInt.of(1);
-            };
-            manager.show(new WicketsConfigScreen(manager, overs));
+            switch(menu.selectedIndex()){
+                case 0->manager.show(new WicketsConfigScreen(manager, OptionalInt.of(1)));
+                case 1->manager.show(new WicketsConfigScreen(manager, OptionalInt.of(2)));
+                case 2->manager.show(new CustomConfigScreen(manager, "overs per innings", 15, value->manager.show(
+                    new WicketsConfigScreen(manager, OptionalInt.of(value))), this));
+                case 3->manager.show(new WicketsConfigScreen(manager, OptionalInt.empty()));
+            }
         }
     }
 }
